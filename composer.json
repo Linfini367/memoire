@@ -1,0 +1,5 @@
+{
+    "require": {
+        "wp-statistics/pchart": "^1.2"
+    }
+}

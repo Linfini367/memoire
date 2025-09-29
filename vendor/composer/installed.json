@@ -1,0 +1,50 @@
+{
+    "packages": [
+        {
+            "name": "wp-statistics/pchart",
+            "version": "1.2.3",
+            "version_normalized": "1.2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wp-statistics/pchart.git",
+                "reference": "721d03460b66de3d52a890c65e7d5cbf3a656059"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wp-statistics/pchart/zipball/721d03460b66de3d52a890c65e7d5cbf3a656059",
+                "reference": "721d03460b66de3d52a890c65e7d5cbf3a656059",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "time": "2022-11-14T13:06:09+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "pChart": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mostafa Soufi",
+                    "email": "mostafa.soufi@hotmail.com"
+                }
+            ],
+            "description": "A PHP Class to build Charts",
+            "support": {
+                "issues": "https://github.com/wp-statistics/pchart/issues",
+                "source": "https://github.com/wp-statistics/pchart/tree/1.2.3"
+            },
+            "abandoned": true,
+            "install-path": "../wp-statistics/pchart"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}
