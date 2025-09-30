@@ -47,18 +47,17 @@ session_start();
             </nav>
         </div>
     </header>
-    <main style="margin-top: 0px; background-image: url('beau-marche-de-rue-au-coucher-du-soleil.jpg'); background-size: cover; background-position: center; min-height: 100vh;">
-        <div class="container " style="background-color: rgba(255, 255, 255, 0.07); padding: 20px; border-radius: 8px; margin-top: 20px; dysplay: flex; align-items: center; justify-content: center; color: black; width: 300px; height: 150px; justify-content: space-between;">
-            <a href="" class="mb-3" style ="text-decoration: none; color: black;">
-            <div class="mb-4 text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 10px; border-radius: 5px;">
-                <h2>MARCHE KADUTU</h2>
-            </div>
+    <main style="margin-top: 0px; background-image: url('beau-marche-de-rue-au-coucher-du-soleil.jpg'); background-size: cover; background-position: center; min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <div class="container" style="background-color: rgba(255, 255, 255, 0.07); padding: 20px; border-radius: 8px; width: 800px; display: flex; flex-direction: row; justify-content: center; gap: 20px;">
+            <a href="marche.php?id=1" style="text-decoration: none; color: black; flex: 1; transition: transform 0.3s;">
+                <div class="text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); hover: transform: scale(1.05);">
+                    <h2>MARCHE KADUTU</h2>
+                </div>
             </a>
-            
-            <a href="" class="mb-3" style ="text-decoration: none; color: black;">
-            <div class="mb-4 text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 10px; border-radius: 5px;">
-                <h2>MARCHE NYAWERA</h2>
-            </div>
+            <a href="marche.php?id=2" style="text-decoration: none; color: black; flex: 1; transition: transform 0.3s;">
+                <div class="text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); hover: transform: scale(1.05);">
+                    <h2>MARCHE NYAWERA</h2>
+                </div>
             </a>
         </div>
     </main>
