@@ -43,7 +43,7 @@
                     <?php else: ?>
                         <li><a href="index.php">Accuel</a></li>
                         <li><a href="Apropos.php">A Propos</a></li>
-                        <li><a href="Contact.php">Conctactez-nous</a></li
+                        <li><a href="Contact.php">Conctactez-nous</a></li>
                         <li><a href="login.php">Connectez-vous</a></li>
                     <?php endif; ?>
                 </ul>
