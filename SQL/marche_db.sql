@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 30 sep. 2025 à 09:36
+-- Généré le : mar. 30 sep. 2025 à 13:46
 -- Version du serveur : 9.1.0
 -- Version de PHP : 8.3.14
 
@@ -34,14 +34,15 @@ CREATE TABLE IF NOT EXISTS `acheteur` (
   `PostNomAcheteur` varchar(100) DEFAULT NULL,
   `SexeAcheteur` enum('M','F') DEFAULT NULL,
   PRIMARY KEY (`IdAcheteur`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `acheteur`
 --
 
 INSERT INTO `acheteur` (`IdAcheteur`, `NomAcheteur`, `PostNomAcheteur`, `SexeAcheteur`) VALUES
-(1, 'Jean', 'Pierre', 'M');
+(1, 'Jean', 'Pierre', 'M'),
+(2, 'JOHN', 'KAKUSU', '');
 
 -- --------------------------------------------------------
 
@@ -106,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `commande` (
   PRIMARY KEY (`IdCommande`),
   KEY `IdProduit` (`IdProduit`),
   KEY `IdMarche` (`IdMarche`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `commande`
@@ -120,9 +121,7 @@ INSERT INTO `commande` (`IdCommande`, `IdProduit`, `PrixUnitaire`, `DateCmd`, `I
 (5, 2, 100.00, '2025-09-23', 3),
 (6, 3, 50.00, '2025-09-23', 2),
 (7, 1, 200.00, '2025-08-25', 3),
-(8, 1, 300.00, '2025-07-17', 3),
-(9, NULL, NULL, NULL, NULL),
-(10, NULL, NULL, NULL, NULL);
+(8, 1, 300.00, '2025-07-17', 3);
 
 -- --------------------------------------------------------
 
@@ -141,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `demande_commande` (
   PRIMARY KEY (`IdDemande`),
   KEY `IdAcheteur` (`IdAcheteur`),
   KEY `IdProduit` (`IdProduit`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `demande_commande`
@@ -152,7 +151,14 @@ INSERT INTO `demande_commande` (`IdDemande`, `IdAcheteur`, `IdProduit`, `PrixPro
 (3, 1, 3, 50.00, '2025-09-23', 'Validée'),
 (4, 1, 2, 500.00, '2025-09-23', 'Rejetée'),
 (5, 1, 1, 200.00, '2025-08-25', 'Validée'),
-(6, 1, 1, 300.00, '2025-07-17', 'Validée');
+(6, 1, 1, 300.00, '2025-07-17', 'Validée'),
+(7, 2, 1, 15.00, '2025-09-30', 'En attente'),
+(8, 2, 3, 20.00, '2025-09-30', 'Rejetée'),
+(9, 2, 3, 20.00, '2025-09-30', 'Rejetée'),
+(10, 2, 3, 20.00, '2025-09-30', 'Validée'),
+(11, 2, 1, 20.00, '2025-09-30', 'Validée'),
+(12, 2, 1, 20.00, '2025-09-30', 'Validée'),
+(13, 2, 1, 20.00, '2025-09-30', 'Validée');
 
 -- --------------------------------------------------------
 
@@ -168,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `marche` (
   `IdAgent` int DEFAULT NULL,
   PRIMARY KEY (`IdMarche`),
   KEY `IdAgent` (`IdAgent`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `marche`
@@ -195,14 +201,15 @@ CREATE TABLE IF NOT EXISTS `prix` (
   PRIMARY KEY (`IdPrix`),
   KEY `IdProduit` (`IdProduit`),
   KEY `IdMarche` (`IdMarche`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `prix`
 --
 
 INSERT INTO `prix` (`IdPrix`, `Valeur`, `Unite`, `DateReleve`, `IdProduit`, `IdMarche`) VALUES
-(1, 1500.00, 'kg', '2025-09-21', 1, 1);
+(1, 1500.00, 'kg', '2025-09-21', 1, 1),
+(2, NULL, 'sac', '2025-08-01', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -222,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `produit` (
   PRIMARY KEY (`IdProduit`),
   KEY `IdVendeur` (`IdVendeur`),
   KEY `IdMarche` (`IdMarche`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `produit`
@@ -233,10 +240,10 @@ INSERT INTO `produit` (`IdProduit`, `NomProduit`, `Description`, `IdVendeur`, `I
 (2, 'sac de riz Azam', 'riz de qualité Tanzanienne', 1, 3, '2025-05-23', 20.00),
 (3, 'Sac farine de blé Azam', 'farine de la tanzanie', 1, 3, '2025-09-23', 30.00),
 (4, 'sac haricots blanc', 'Haricot de Kiliba', 2, 3, '2025-09-27', 50.00),
-(8, 'Sac haricot rouge', 'haricot meilleur qualité', 2, 3, '2025-09-29', 100.00),
-(7, 'Sac de farine blé Azam', 'Farine Tanzanie', 2, 3, '2025-09-29', 25.00),
-(9, 'Sac OMO ', 'OMO bleu', 2, 3, '2025-09-29', 5.00),
-(10, 'sac de riz Azam', 'Riz tanzanie', 2, 3, '2025-09-29', 20.00);
+(8, 'Sac haricot rouge', 'haricot meilleur qualité', 2, 2, '2025-09-29', 100.00),
+(7, 'Sac de farine blé Azam', 'Farine Tanzanie', 2, 2, '2025-09-29', 25.00),
+(9, 'Sac OMO ', 'OMO bleu', 2, 2, '2025-09-29', 5.00),
+(10, 'sac de riz Azam', 'Riz tanzanie', 2, 2, '2025-09-29', 20.00);
 
 -- --------------------------------------------------------
 
@@ -278,7 +285,7 @@ CREATE TABLE IF NOT EXISTS `releve_mensuel` (
   PRIMARY KEY (`IdReleve`),
   KEY `IdProduit` (`IdProduit`),
   KEY `IdMarche` (`IdMarche`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `releve_mensuel`
@@ -286,11 +293,17 @@ CREATE TABLE IF NOT EXISTS `releve_mensuel` (
 
 INSERT INTO `releve_mensuel` (`IdReleve`, `IdProduit`, `IdMarche`, `Mois`, `Prix`) VALUES
 (1, 1, 3, '2025-09-01', 6600.00),
-(3, 3, 3, '2025-09-01', 5000.00),
-(4, 1, 3, '2025-09-01', 4000.00),
-(5, 1, 3, '2025-08-01', 4000.00),
-(2, 1, 2, '2025-09-15', 1000.00),
-(13, 4, 2, '0000-00-00', 0.00);
+(28, 3, 2, '2025-08-01', 3250.00),
+(27, 2, 2, '2025-09-01', 3100.00),
+(26, 2, 2, '2025-08-01', 2500.00),
+(25, 1, 2, '2025-09-01', 1250.00),
+(24, 1, 2, '2025-08-01', 1000.00),
+(23, 3, 3, '2025-09-01', 5000.00),
+(22, 3, 3, '2025-08-01', 4000.00),
+(21, 2, 3, '2025-09-01', 2500.00),
+(20, 2, 3, '2025-08-01', 5000.00),
+(19, 1, 3, '2025-08-01', 3000.00),
+(29, 3, 2, '2025-09-01', 5000.00);
 
 -- --------------------------------------------------------
 

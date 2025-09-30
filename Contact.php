@@ -1,8 +1,3 @@
-<?php
-     session_start();  
-     require_once 'header.php'; 
-     
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,6 +13,24 @@
     <link rel="stylesheet" href="new.css">
 </head>
 <body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="home.png" alt="logo" width="60" height="60">
+                <div class="logo-text">
+                    <h1>Suivi des variations du Prix</h1>
+                    <span>Division Provinciale de l'Économie Nationale</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.php">Accuel</a></li>
+                        <li><a href="Apropos.php">A Propos</a></li>
+                        <li><a href="Contact.php">Conctactez-nous</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
     <div class="container">
         <h2 class="page-title">Contactez la Division Provinciale de l'Économie Nationale</h2>
         
