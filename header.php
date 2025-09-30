@@ -31,6 +31,7 @@
                         <?php if ($_SESSION['role'] === 'vendeur'): ?>
                             <li><a href="vendeur_dashboard.php">Accueil vendeur</a></li>
                             <li><a href="valider_commande.php">Valider les commandes</a></li>
+                            <li><a href="agent_releve_mensuel.php">Ajouter le prix mensuel</a></li>
                         <?php elseif ($_SESSION['role'] === 'admin'): ?>
                             <li><a href="admin_dashboard.php">Accueil</a></li>
                             <li><a href="admin_marche.php">Gerer les marchés</a></li>

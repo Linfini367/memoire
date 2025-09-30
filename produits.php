@@ -1,18 +1,24 @@
 <?php
 session_start();
-require_once 'db.php';  // Modification ici pour utiliser db.php
+require_once 'db.php';
 
-$vendeur_id = $_GET['vendeur_id'];
-$sql = "SELECT p.*, v.nom as vendeur_nom 
-        FROM produits p 
-        JOIN vendeurs v ON p.vendeur_id = v.id 
-        WHERE v.id = ?";
-$stmt = $pdo->prepare($sql);  // Utilisation de $pdo au lieu de $conn
+// Vérifier que le paramètre vendeur_id existe et est valide
+if (!isset($_GET['vendeur_id']) || !is_numeric($_GET['vendeur_id'])) {
+    echo "<div class='alert alert-danger'>Vendeur non spécifié.</div>";
+    exit;
+}
+
+$vendeur_id = intval($_GET['vendeur_id']);
+
+// Récupérer les produits du vendeur
+$sql = "SELECT * FROM produit WHERE IdVendeur = ?";
+$stmt = $pdo->prepare($sql);
 $stmt->execute([$vendeur_id]);
 $produits = $stmt->fetchAll();
 
-$sql_vendeur = "SELECT * FROM vendeur WHERE id = ?";
-$stmt = $pdo->prepare($sql_vendeur);  // Utilisation de $pdo au lieu de $conn
+// Récupérer les infos du vendeur
+$sql_vendeur = "SELECT * FROM vendeur WHERE IdVendeur = ?";
+$stmt = $pdo->prepare($sql_vendeur);
 $stmt->execute([$vendeur_id]);
 $vendeur = $stmt->fetch();
 ?>
@@ -22,8 +28,9 @@ $vendeur = $stmt->fetch();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produits de <?php echo $vendeur['nom']; ?></title>
-    <link rel="stylesheet" href="./bootstrap-5.3.8-dist/css/bootstrap.min.css">
+    <title>Produits de <?php echo $vendeur ? $vendeur['NomVendeur'] : ''; ?></title>
+    <link rel="stylesheet" href="./vendor/bootstrap/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .product-grid {
             display: grid;
@@ -31,7 +38,6 @@ $vendeur = $stmt->fetch();
             gap: 2rem;
             padding: 2rem;
         }
-        
         .product-card {
             background: white;
             border-radius: 15px;
@@ -39,21 +45,17 @@ $vendeur = $stmt->fetch();
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s ease;
         }
-        
         .product-card:hover {
             transform: translateY(-5px);
         }
-        
         .product-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
         }
-        
         .product-info {
             padding: 1.5rem;
         }
-        
         .vendor-header {
             background: linear-gradient(135deg, #2c3e50, #3498db);
             color: white;
@@ -61,7 +63,6 @@ $vendeur = $stmt->fetch();
             margin-bottom: 2rem;
             border-radius: 0 0 20px 20px;
         }
-        
         .price {
             font-size: 1.25rem;
             font-weight: bold;
@@ -72,8 +73,7 @@ $vendeur = $stmt->fetch();
 <body style="background-color: #f5f5f5;">
     <div class="vendor-header">
         <div class="container">
-            <h1>Produits de <?php echo $vendeur['nom']; ?></h1>
-            <p><?php echo $vendeur['specialite']; ?></p>
+            <h1>Produits de <?php echo $vendeur ? $vendeur['NomVendeur'] : 'Vendeur inconnu'; ?></h1>
         </div>
     </div>
 
@@ -81,18 +81,13 @@ $vendeur = $stmt->fetch();
         <div class="product-grid">
             <?php foreach($produits as $produit): ?>
                 <div class="product-card">
-                    <img src="<?php echo $produit['image'] ?? 'default-product.jpg'; ?>" 
-                         alt="<?php echo $produit['nom']; ?>" 
-                         class="product-image">
+                    <img src="./produits-chimiques.png" alt="" style="width:5rem; height:5rem; object-fit:cover; margin:0 auto; display:block;">
                     <div class="product-info">
-                        <h3><?php echo $produit['nom']; ?></h3>
-                        <p class="text-muted"><?php echo $produit['description']; ?></p>
+                        <h3><?php echo $produit['NomProduit']; ?></h3>
+                        <p class="text-muted"><?php echo $produit['Description']; ?></p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="price">$<?php echo $produit['prix']; ?></span>
-                            <span class="badge bg-<?php echo $produit['en_stock'] ? 'success' : 'danger'; ?>">
-                                <?php echo $produit['en_stock'] ? 'En stock' : 'Rupture'; ?>
-                            </span>
                         </div>
+                        <a class="btn btn-primary" href="demande_commande.php?idProduit=<?= $produit['IdProduit'] ?>&vendeur_id=<?= $vendeur_id ?>" >Demander ce produit</a>
                     </div>
                 </div>
             <?php endforeach; ?>

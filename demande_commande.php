@@ -1,9 +1,26 @@
 <?php
+session_start();
 require 'db.php';
 
-$produits = $pdo->query("SELECT IdProduit, NomProduit FROM produit")->fetchAll();
-$acheteurs = $pdo->query("SELECT IdAcheteur, NomAcheteur, PostNomAcheteur FROM acheteur")->fetchAll();
-$marches = $pdo->query("SELECT IdMarche, NomMarche FROM marche")->fetchAll(); // Ajout pour les marchés
+$idProduit = isset($_GET['idProduit']) ? intval($_GET['idProduit']) : 0;
+$vendeur_id = isset($_GET['vendeur_id']) ? intval($_GET['vendeur_id']) : 0;
+
+$_SESSION['vendeur_id'] = $vendeur_id;
+
+$produit = null;
+$marche = null;
+
+if ($idProduit) {
+    $stmt = $pdo->prepare("SELECT p.*, m.NomMarche, m.IdMarche FROM produit p JOIN marche m ON p.IdMarche = m.IdMarche WHERE p.IdProduit = ?");
+    $stmt->execute([$idProduit]);
+    $produit = $stmt->fetch();
+    if ($produit) {
+        $marche = [
+            'IdMarche' => $produit['IdMarche'],
+            'NomMarche' => $produit['NomMarche']
+        ];
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -22,35 +39,30 @@ $marches = $pdo->query("SELECT IdMarche, NomMarche FROM marche")->fetchAll(); //
       <div class="card-body">
         <form action="traitement_demande.php" method="POST">
           <div class="mb-3">
-            <label class="form-label">Acheteur</label>
-            <select name="idAcheteur" class="form-select" required>
-              <option value="">-- Choisir un acheteur --</option>
-              <?php foreach ($acheteurs as $a): ?>
-                <option value="<?= $a['IdAcheteur'] ?>">
-                  <?= $a['NomAcheteur'] . ' ' . $a['PostNomAcheteur'] ?>
-                </option>
-              <?php endforeach; ?>
-            </select>
+            <label class="form-label">Nom de l'acheteur</label>
+            <input type="text" name="nomAcheteur" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Post-nom de l'acheteur</label>
+            <input type="text" name="postNomAcheteur" class="form-control" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Marchandise</label>
-            <select name="idProduit" class="form-select" required>
-              <option value="">-- Choisir une marchandise --</option>
-              <?php foreach ($produits as $p): ?>
-                <option value="<?= $p['IdProduit'] ?>"><?= $p['NomProduit'] ?></option>
-              <?php endforeach; ?>
-            </select>
+            <input type="text" class="form-control" value="<?= $produit ? $produit['NomProduit'] : '' ?>" disabled>
+            <input type="hidden" name="idProduit" value="<?= $produit ? $produit['IdProduit'] : '' ?>">
           </div>
 
           <div class="mb-3">
             <label class="form-label">Marché</label>
-            <select name="idMarche" class="form-select" required>
-              <option value="">-- Choisir un marché --</option>
-              <?php foreach ($marches as $m): ?>
-                <option value="<?= $m['IdMarche'] ?>"><?= $m['NomMarche'] ?></option>
-              <?php endforeach; ?>
-            </select>
+            <input type="text" class="form-control" value="<?= $marche ? $marche['NomMarche'] : '' ?>" disabled>
+            <input type="hidden" name="idMarche" value="<?= $marche ? $marche['IdMarche'] : '' ?>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Prix du produit</label>
+            <input type="number" class="form-control" value="<?= $produit ? $produit['Prix'] : '' ?>" disabled>
+            <input type="hidden" name="prixProduit" value="<?= $produit ? $produit['Prix'] : '' ?>">
           </div>
 
           <div class="mb-3">
@@ -62,6 +74,8 @@ $marches = $pdo->query("SELECT IdMarche, NomMarche FROM marche")->fetchAll(); //
             <label class="form-label">Date de la demande</label>
             <input type="date" name="dateDemande" class="form-control" value="<?= date('Y-m-d') ?>" required>
           </div>
+
+          <input type="hidden" name="vendeur_id" value="<?= $vendeur_id ?>">
 
           <button type="submit" class="btn btn-success">Soumettre la demande</button>
         </form>

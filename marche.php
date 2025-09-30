@@ -1,26 +1,32 @@
 <?php
 session_start();
-require_once 'db.php';  // Modification ici pour utiliser db.php
+require_once 'db.php';
 
-// Modifier aussi la variable de connexion
 $marche_id = $_GET['id'];
-$sql = "SELECT * FROM vendeurs WHERE marche_id = ?";
-$stmt = $pdo->prepare($sql);  // Utilisation de $pdo au lieu de $conn
-$stmt->execute([$marche_id]);
-$vendeurs = $stmt->fetchAll();
 
-$sql_marche = "SELECT nom FROM marches WHERE id = ?";
-$stmt = $pdo->prepare($sql_marche);  // Utilisation de $pdo au lieu de $conn
+// Récupérer le nom du marché
+$sql_marche = "SELECT NomMarche FROM marche WHERE IdMarche = ?";
+$stmt = $pdo->prepare($sql_marche);
 $stmt->execute([$marche_id]);
 $marche = $stmt->fetch();
-?>
 
+if (!$marche) {
+    echo "<div class='alert alert-danger'>Marché introuvable.</div>";
+    exit;
+}
+
+// Récupérer les vendeurs du marché
+$sql = "SELECT * FROM vendeur WHERE IdMarche = ?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$marche_id]);
+$vendeurs = $stmt->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vendeurs - <?php echo $marche['nom']; ?></title>
+    <title>Vendeurs - <?php echo $marche['NomMarche']; ?></title>
     <link rel="stylesheet" href="./bootstrap-5.3.8-dist/css/bootstrap.min.css">
     <style>
         .vendor-grid {
@@ -63,25 +69,28 @@ $marche = $stmt->fetch();
 <body style="background-color: #f5f5f5;">
     <div class="page-header">
         <div class="container">
-            <h1><?php echo $marche['nom']; ?></h1>
+            <h1><?php echo $marche['NomMarche']; ?></h1>
             <p>Liste des vendeurs disponibles</p>
         </div>
     </div>
-
     <div class="container">
         <div class="vendor-grid">
-            <?php foreach($vendeurs as $vendeur): ?>
-                <a href="produits.php?vendeur_id=<?php echo $vendeur['id']; ?>" 
+            <?php foreach($vendeurs as $vendeur): 
+                // Compter les produits pour chaque vendeur
+                $sql_count = "SELECT COUNT(*) FROM produit WHERE IdVendeur = ?";
+                $stmt_count = $pdo->prepare($sql_count);
+                $stmt_count->execute([$vendeur['IdVendeur']]);
+                $nb_produits = $stmt_count->fetchColumn();
+            ?>
+                <a href="produits.php?vendeur_id=<?php echo $vendeur['IdVendeur']; ?>" 
                    style="text-decoration: none; color: inherit;">
                     <div class="vendor-card">
-                        <img src="<?php echo $vendeur['photo'] ?? 'default-vendor.jpg'; ?>" 
-                             alt="Photo vendeur" 
-                             class="vendor-image">
-                        <h3 class="text-center"><?php echo $vendeur['nom']; ?></h3>
-                        <p class="text-center text-muted"><?php echo $vendeur['specialite']; ?></p>
+                        <img src="./homme-daffaire.png" alt="" style="width:5rem; height:5rem; object-fit:cover; border-radius:50%; margin:0 auto; display:block;">
+                        <h3 class="text-center"><?php echo $vendeur['NomVendeur']; ?></h3>
+                        <p class="text-center text-muted"><?php echo isset($vendeur['specialite']) ? $vendeur['specialite'] : ''; ?></p>
                         <div class="text-center mt-3">
                             <span class="badge bg-primary">
-                                <?php echo $vendeur['nb_produits']; ?> produits
+                                <?php echo $nb_produits; ?> produits
                             </span>
                         </div>
                     </div>

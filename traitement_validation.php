@@ -1,30 +1,32 @@
 <?php
 require 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $idDemande = $_POST['idDemande'];
-  $action = $_POST['action'];
+$idDemande = $_GET['idDemande'] ?? null;
+$action = $_GET['action'] ?? null;
 
-  if ($action === 'valider') {
-    // Récupérer les infos de la demande
-    $demande = $pdo->prepare("SELECT IdProduit, PrixPropose, DateDemande FROM demande_commande WHERE IdDemande = ?");
-    $demande->execute([$idDemande]);
-    $data = $demande->fetch();
+if (!$idDemande || !$action) {
+  echo "<div style='padding:20px;font-family:sans-serif;color:red;'>Erreur : données manquantes.</div>";
+  exit;
+}
 
-    // Insérer dans commande
-    $stmt = $pdo->prepare("INSERT INTO commande (IdProduit, PrixUnitaire, DateCmd)
-                           VALUES (?, ?, ?)");
-    $stmt->execute([$data['IdProduit'], $data['PrixPropose'], $data['DateDemande']]);
+if ($action === 'valider') {
+  $demande = $pdo->prepare("SELECT IdProduit, PrixPropose, DateDemande FROM demande_commande WHERE IdDemande = ?");
+  $demande->execute([$idDemande]);
+  $data = $demande->fetch();
 
-    // Mettre à jour le statut
-    $pdo->prepare("UPDATE demande_commande SET Statut = 'Validée' WHERE IdDemande = ?")->execute([$idDemande]);
-
-    echo "<div style='padding:20px;font-family:sans-serif;'>✅ Commande validée et enregistrée.</div>";
-    header("location: valider_demande.php");
-  } elseif ($action === 'rejeter') {
-    $pdo->prepare("UPDATE demande_commande SET Statut = 'Rejetée' WHERE IdDemande = ?")->execute([$idDemande]);
-    echo "<div style='padding:20px;font-family:sans-serif;color:red;'>❌ Commande rejetée.</div>";
-    header("location: valider_demande.php");
+  if (!$data) {
+    echo "<div style='padding:20px;font-family:sans-serif;color:red;'>Erreur : demande introuvable.</div>";
+    exit;
   }
+
+  $stmt = $pdo->prepare("INSERT INTO commande (IdProduit, PrixUnitaire, DateCmd) VALUES (?, ?, ?)");
+  $stmt->execute([$data['IdProduit'], $data['PrixPropose'], $data['DateDemande']]);
+  $pdo->prepare("UPDATE demande_commande SET Statut = 'Validée' WHERE IdDemande = ?")->execute([$idDemande]);
+  header("Location: valider_commande.php");
+  exit;
+} elseif ($action === 'rejeter') {
+  $pdo->prepare("UPDATE demande_commande SET Statut = 'Rejetée' WHERE IdDemande = ?")->execute([$idDemande]);
+  header("Location: valider_commande.php");
+  exit;
 }
 ?>

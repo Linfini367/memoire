@@ -1,12 +1,13 @@
 <?php
 require 'db.php';
 
-// Exemple : commandes en attente simulées
+// Récupération des commandes en attente
 $commandesEnAttente = $pdo->query("
-  SELECT p.IdProduit, p.NomProduit, a.IdAcheteur, a.NomAcheteur, a.PostNomAcheteur
-  FROM produit p
-  JOIN acheteur a ON a.IdAcheteur = 1 -- à adapter selon ton système
-  LIMIT 5 
+  SELECT d.IdDemande, p.NomProduit, a.NomAcheteur, a.PostNomAcheteur
+  FROM demande_commande d
+  JOIN produit p ON d.IdProduit = p.IdProduit
+  JOIN acheteur a ON d.IdAcheteur = a.IdAcheteur
+  WHERE d.Statut = 'En attente'
 ")->fetchAll();
 ?>
 
@@ -34,13 +35,8 @@ $commandesEnAttente = $pdo->query("
             <td><?= $cmd['NomProduit'] ?></td>
             <td><?= $cmd['NomAcheteur'] . ' ' . $cmd['PostNomAcheteur'] ?></td>
             <td>
-              <form action="traitement_validation.php" method="POST" class="d-flex gap-2">
-                <input type="hidden" name="idProduit" value="<?= $cmd['IdProduit'] ?>">
-                <input type="hidden" name="prixUnitaire" value="2500"> <!-- à adapter -->
-                <input type="hidden" name="dateCmd" value="<?= date('Y-m-d') ?>">
-                <button type="submit" name="action" value="valider" class="btn btn-success btn-sm">Valider</button>
-                <button type="submit" name="action" value="rejeter" class="btn btn-danger btn-sm">Rejeter</button>
-              </form>
+              <a href="traitement_validation.php?idDemande=<?= $cmd['IdDemande'] ?>&action=valider" class="btn btn-success btn-sm">Valider</a>
+              <a href="traitement_validation.php?idDemande=<?= $cmd['IdDemande'] ?>&action=rejeter" class="btn btn-danger btn-sm">Rejeter</a>
             </td>
           </tr>
         <?php endforeach; ?>

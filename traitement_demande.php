@@ -1,19 +1,32 @@
 <?php
+session_start();
 require 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $idAcheteur = $_POST['idAcheteur'];
-  $idProduit = $_POST['idProduit'];
-  $idMarche = $_POST['idMarche']; // Ajouté
-  $prixPropose = $_POST['prixPropose'];
-  $dateDemande = $_POST['dateDemande'];
+// Récupérer les données du formulaire
+$nomAcheteur = $_POST['nomAcheteur'] ?? '';
+$postNomAcheteur = $_POST['postNomAcheteur'] ?? '';
+$idProduit = $_POST['idProduit'] ?? null;
+$prixPropose = $_POST['prixPropose'] ?? null;
+$dateDemande = $_POST['dateDemande'] ?? date('Y-m-d');
+$vendeur_id = $_SESSION['vendeur_id'] ?? null;
 
-  $stmt = $pdo->prepare("INSERT INTO demande_commande (IdAcheteur, IdProduit, IdMarche, PrixPropose, DateDemande, Statut)
-                         VALUES (?, ?, ?, ?, ?, 'En attente')");
-  $stmt->execute([$idAcheteur, $idProduit, $idMarche, $prixPropose, $dateDemande]);
+// 1. Vérifier si l'acheteur existe déjà
+$stmt = $pdo->prepare("SELECT IdAcheteur FROM acheteur WHERE NomAcheteur = ? AND PostNomAcheteur = ?");
+$stmt->execute([$nomAcheteur, $postNomAcheteur]);
+$idAcheteur = $stmt->fetchColumn();
 
-  echo "<div style='padding:20px;font-family:sans-serif;'>✅ Demande enregistrée. En attente de validation par le vendeur.</div>";
-  header("location: demande_commande.php");
-  exit();
+if (!$idAcheteur) {
+    // Si non, l'ajouter
+    $stmt = $pdo->prepare("INSERT INTO acheteur (NomAcheteur, PostNomAcheteur, SexeAcheteur) VALUES (?, ?, ?)");
+    $stmt->execute([$nomAcheteur, $postNomAcheteur, 'N']); // 'N' pour non spécifié
+    $idAcheteur = $pdo->lastInsertId();
 }
+
+// 2. Insérer la demande de commande
+$stmt = $pdo->prepare("INSERT INTO demande_commande (IdAcheteur, IdProduit, PrixPropose, DateDemande, Statut) VALUES (?, ?, ?, ?, ?)");
+$stmt->execute([$idAcheteur, $idProduit, $prixPropose, $dateDemande, 'En attente']);
+
+// 3. Redirection
+header('Location: produits.php?vendeur_id=' . $vendeur_id);
+exit;
 ?>

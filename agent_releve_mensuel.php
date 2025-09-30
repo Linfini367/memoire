@@ -13,7 +13,7 @@ $marches = $pdo->query("SELECT IdMarche, NomMarche FROM marche")->fetchAll();
 </head>
 <body class="bg-light">
   <div class="container mt-5">
-    <h3 class="mb-4">📅 Relever les prix mensuels</h3>
+    <h3 class="mb-4">📅 Enregistrer les prix mensuels</h3>
     <form action="traitement_releve_mois.php" method="POST" class="card p-4 shadow">
       <div class="mb-3">
         <label class="form-label">Produit</label>
@@ -38,6 +38,11 @@ $marches = $pdo->query("SELECT IdMarche, NomMarche FROM marche")->fetchAll();
       <div class="mb-3">
         <label class="form-label">Mois</label>
         <input type="month" name="mois" class="form-control" value="<?= date('Y-m') ?>" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Prix relevé (par unité ou sac)</label>
+        <input type="number" name="prix" class="form-control" required>
       </div>
 
       <button type="submit" class="btn btn-success">📤 Enregistrer</button>
