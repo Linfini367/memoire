@@ -1,6 +1,8 @@
-<?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+<?php
+session_start();
+?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +15,6 @@
     <link rel="stylesheet" href="Index.css">
 </head>
 <body>
-
-    <!-- En-tête -->
-
     <header>
         <div class="container header-content">
             <div class="logo">
@@ -27,6 +26,8 @@
             </div>
             <nav>
                 <ul>
+                    <li><a href="Apropos.php">A Propos</a></li>
+                        <li><a href="Contact.php">Conctactez-nous</a></li>
                     <?php if (isset($_SESSION['role'])): ?>
                         <?php if ($_SESSION['role'] === 'vendeur'): ?>
                             <li><a href="vendeur_dashboard.php">Accueil vendeur</a></li>
@@ -40,49 +41,26 @@
                         <?php endif; ?>
                         <li><a href="deconnexion.php">Déconnexion</a></li>
                     <?php else: ?>
-                        <li><a href="index.php">Accuel</a></li>
-                        <li><a href="Apropos.php">A Propos</a></li>
-                        <li><a href="Contact.php">Conctactez-nous</a></li
                         <li><a href="login.php">Connectez-vous</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
         </div>
     </header>
-
-    <!-- Bannière principale -->
-    <section class="hero">
-        <h1></h1>
-        <div class="container">
-            <div class="hero-content">
-                <h2>Surveillance des Prix sur les Marchés de Bukavu</h2>
+    <main style="margin-top: 0px; background-image: url('beau-marche-de-rue-au-coucher-du-soleil.jpg'); background-size: cover; background-position: center; min-height: 100vh;">
+        <div class="container " style="background-color: rgba(255, 255, 255, 0.07); padding: 20px; border-radius: 8px; margin-top: 20px; dysplay: flex; align-items: center; justify-content: center; color: black; width: 300px; height: 150px; justify-content: space-between;">
+            <a href="" class="mb-3" style ="text-decoration: none; color: black;">
+            <div class="mb-4 text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 10px; border-radius: 5px;">
+                <h2>MARCHE KADUTU</h2>
             </div>
+            </a>
+            
+            <a href="" class="mb-3" style ="text-decoration: none; color: black;">
+            <div class="mb-4 text-center" style="background-color: rgba(255, 255, 255, 0.83); padding: 10px; border-radius: 5px;">
+                <h2>MARCHE NYAWERA</h2>
+            </div>
+            </a>
         </div>
-    </section>
-
-       <script>
-  // Carrousel d'images en background de la section .hero
-  const images = [
-    "exposition-sur-le-marche-des-fruits-frais.jpg",
-    "marche-de-rue-la-nuit.jpg",
-    "plan-moyen-mere-et-enfant-au-marche.jpg",
-    "beau-marche-de-rue-au-coucher-du-soleil.jpg"
-  ];
-  let index = 0;
-  const hero = document.querySelector(".hero");
-
-  function changeBackground() {
-    hero.style.backgroundImage = `url('${images[index]}')`;
-    hero.style.backgroundSize = "cover";
-    hero.style.backgroundPosition = "center";
-    hero.style.backgroundRepeat = "no-repeat";
-    index = (index + 1) % images.length;
-  }
-  // Afficher la première image
-  changeBackground();
-  // Changer toutes les 10 secondes
-  setInterval(changeBackground, 10000);
-</script>
+    </main>
 </body>
 </html>
-
