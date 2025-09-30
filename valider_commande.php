@@ -6,7 +6,7 @@ $commandesEnAttente = $pdo->query("
   SELECT p.IdProduit, p.NomProduit, a.IdAcheteur, a.NomAcheteur, a.PostNomAcheteur
   FROM produit p
   JOIN acheteur a ON a.IdAcheteur = 1 -- à adapter selon ton système
-  LIMIT 5
+  LIMIT 5 
 ")->fetchAll();
 ?>
 
